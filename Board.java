@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class Board {
-    int[] cells = new int[24];
+
     Player[] player;
     Scanner in = new Scanner(System.in);
     int sizeOfPlayer;
