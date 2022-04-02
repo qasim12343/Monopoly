@@ -61,6 +61,7 @@ class test {
                 }
 
                 switch (b1.player[turn].numberOfCell) {
+                //Parking
                     case 1:
                         System.out.println("Enter your command: 1-build, 2-buy, 3-sell, 4-fly\n" +
                                 "5-free, 6-invest, 7-index, 8-property, 9-time, 10-rank");
@@ -100,29 +101,29 @@ class test {
                     case 20:
                         b1.player[turn].balance -= 300;
                         break;
-                //
+                //Cinema
                     case 4:
                     case 8:
                     case 15:
                         b1.player[turn].balance -= 400;
                         break;
+                //Road
                     case 5:
                     case 10:
                     case 16:
                         b1.player[turn].balance -= 500;
                         break;
+                //Award
                     case 6:
                         b1.player[turn].balance -= 110;
                         break;
+                //Grounds
                     case 7:
                         b1.player[turn].balance -= 120;
                         break;
-
                     case 9:
                         b1.player[turn].balance -= 10;
                         break;
-
-
                     case 12:
                         b1.player[turn].balance -= 105;
                         break;
@@ -132,8 +133,6 @@ class test {
                     case 14:
                         b1.player[turn].balance -= 301;
                         break;
-
-
 
                     case 17:
                         b1.player[turn].balance -= 60;
@@ -153,6 +152,7 @@ class test {
                     case 23:
                         b1.player[turn].balance -= 100;
                         break;
+                // Chance
                     case 24:
                         b1.player[turn].balance -= 100;
                         break;
