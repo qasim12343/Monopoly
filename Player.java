@@ -4,6 +4,6 @@ public class Player {
     String name;
     public Player(String name){
         this.name = name;
-        balance = 1200;
+        balance = 1500;
     }
 }

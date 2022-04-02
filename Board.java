@@ -94,13 +94,21 @@ class test {
                     case 2:
                         b1.player[turn].balance -= 100;
                         break;
+                //Airport
                     case 3:
+                    case 11:
+                    case 20:
                         b1.player[turn].balance -= 300;
                         break;
+                //
                     case 4:
+                    case 8:
+                    case 15:
                         b1.player[turn].balance -= 400;
                         break;
                     case 5:
+                    case 10:
+                    case 16:
                         b1.player[turn].balance -= 500;
                         break;
                     case 6:
@@ -109,18 +117,12 @@ class test {
                     case 7:
                         b1.player[turn].balance -= 120;
                         break;
-                    case 8:
-                        b1.player[turn].balance -= 140;
-                        break;
+
                     case 9:
                         b1.player[turn].balance -= 10;
                         break;
-                    case 10:
-                        b1.player[turn].balance -= 1;
-                        break;
-                    case 11:
-                        b1.player[turn].balance -= 103;
-                        break;
+
+
                     case 12:
                         b1.player[turn].balance -= 105;
                         break;
@@ -130,12 +132,9 @@ class test {
                     case 14:
                         b1.player[turn].balance -= 301;
                         break;
-                    case 15:
-                        b1.player[turn].balance -= 40;
-                        break;
-                    case 16:
-                        b1.player[turn].balance -= 50;
-                        break;
+
+
+
                     case 17:
                         b1.player[turn].balance -= 60;
                         break;
@@ -145,9 +144,7 @@ class test {
                     case 19:
                         b1.player[turn].balance -= 80;
                         break;
-                    case 20:
-                        b1.player[turn].balance -= 90;
-                        break;
+
                     case 21:
                         break;
                     case 22:
