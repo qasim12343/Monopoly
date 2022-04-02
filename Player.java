@@ -6,4 +6,7 @@ public class Player {
         this.name = name;
         balance = 1500;
     }
+    
+    
+    
 }
