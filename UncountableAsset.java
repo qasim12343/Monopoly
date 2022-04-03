@@ -58,7 +58,6 @@ class Chance extends UncountableAsset {
 
 class Prison extends UncountableAsset {
 
-
 }
 
 class Ground extends UncountableAsset {
@@ -71,7 +70,7 @@ class Ground extends UncountableAsset {
 
 class Cinema extends UncountableAsset {
     int number;
-    Player owner;
+    Player owner = new Player("Bank");
 
 
     public void payToOwner(Player player) throws LowBalance {

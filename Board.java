@@ -6,8 +6,8 @@ public class Board {
     Scanner in = new Scanner(System.in);
     int sizeOfPlayer;
     AirPort airPort = new AirPort();
-    Cinema[] cinemas = new Cinema[4];
-    Ground[] grounds = new Ground[8];
+    Cinema[] cinemas = {new Cinema(), new Cinema(), new Cinema(), new Cinema()};
+    Ground[] grounds = {new Ground(),new Ground(),new Ground(),new Ground(),new Ground(),new Ground(),new Ground(),new Ground()};
 
     public Board(int sizeOfPlayer) {
         this.sizeOfPlayer = sizeOfPlayer;
@@ -41,7 +41,7 @@ class test {
         boolean cont1 = true;
         do {
             try {
-                if (cinema.owner == null) {
+                if (cinema.owner.name.equals("Bank")) {
                     System.out.println("1-buy  2-go ahead");
                     switch (input.nextInt()) {
                         case 1:
@@ -63,7 +63,7 @@ class test {
         } while (!cont1);
     }
 
-    public static void create_game() throws Exception {
+    public static void create_game() {
         System.out.println("Enter number of players");
         int size = input.nextInt();
         while (size < 2 || size > 4) {
@@ -85,7 +85,23 @@ class test {
                 System.out.println("try again");
                 dice = input.nextInt();
             }
-            currentPlayer.numberOfCell += dice;
+            if(currentPlayer.numberOfCell == 13){
+                if (dice == 1)
+                    currentPlayer.numberOfCell += dice;
+            }else {
+                currentPlayer.numberOfCell += dice;
+                if(dice == 6){
+                    System.out.println("Enter dice number");
+                    dice = input.nextInt();
+                    while (dice > 6 || dice < 1) {
+                        System.out.println("try again");
+                        dice = input.nextInt();
+                    }if(dice == 6)
+                        currentPlayer.numberOfCell = 13;
+                    else
+                        currentPlayer.numberOfCell += dice;
+                }
+            }
 
             if (currentPlayer.numberOfCell > 24) {
                 countRound++;
@@ -106,13 +122,21 @@ class test {
                     do{
                         System.out.println("1-buy a ticket to travel\n2-go on");
                         switch (input.nextInt()) {
-                            case 1: b1.airPort.buyTicket(currentPlayer);break;
+                            case 1:
+                                try {
+                                    b1.airPort.buyTicket(currentPlayer);
+                                } catch (LowBalance e) {
+                                    System.out.println(e.getMessage());
+                                } catch (WrongInput e) {
+                                    cont = false;
+                                }
                             case 2: break;
                             default:
                                 cont = false;
+                                break;
                         }
                     }while (!cont);
-
+                    break;
             //Cinema
                 case 4:
                     doCinemaCommands(b1.cinemas[0], currentPlayer );break;
@@ -122,19 +146,21 @@ class test {
                     doCinemaCommands(b1.cinemas[2], currentPlayer );break;
                 case 22:
                     doCinemaCommands(b1.cinemas[3], currentPlayer );break;
+
             //Road
                 case 5:
                 case 10:
                 case 16:
+                    System.out.println("Cost 100 $ for road");
                     currentPlayer.balance -= 100;
                     break;
             //Award
                 case 6:
+                    System.out.println("Achieve 200 from award");
                     currentPlayer.balance += 200;
                     break;
             //Grounds
                 case 2:
-
                     break;
                 case 7:
                 case 9:
@@ -152,11 +178,53 @@ class test {
                     break;
             // Tax
                 case 17:
+                    if(currentPlayer.balance*10/100 > currentPlayer.balance)
+                        System.out.println("1-sell property");
+                    System.out.println("Cost "+currentPlayer.balance*10/100+ " for the tax");
                     currentPlayer.balance -= currentPlayer.balance*10/100;
                     break;
             //Prison
                 case 13:
-                    currentPlayer.balance -= 101;
+                    boolean cont2 = true;
+                    do{
+                        System.out.println("You are in prison");
+                        System.out.println("1-release by chanceCard\n2-stay  3-pay 50 $ to release");
+                        switch (input.nextInt()) {
+                            case 1:
+                                if(currentPlayer.chanceToRelease >=1){
+                                    currentPlayer.numberOfCell++;break;
+                                } else{
+                                    System.out.println("You do not have enough card!");
+                                    cont2 = false;
+                                }break;
+
+                            case 2:
+                                if (currentPlayer.balance < 10){
+                                    System.out.println("You do not have enough money to pay");
+                                    System.out.println("1- Use another option\n2-sell property");    ///sell
+                                    switch (input.nextInt()){
+                                        case 1:cont2 = false;break;
+                                        case 2:break;
+                                    }
+                                }
+                                else
+                                    currentPlayer.balance -= 10;
+                                break;
+                            case 3:
+                                if (currentPlayer.balance < 50){
+                                    System.out.println("You do not have enough money to pay");
+                                    System.out.println("1- Use another option\n2-sell property");    ///sell
+                                    switch (input.nextInt()){
+                                        case 1:cont2 = false;break;
+                                        case 2:break;
+                                    }
+                                }else{
+                                    currentPlayer.balance-=50;
+                                    currentPlayer.numberOfCell++;
+                                }
+                                break;
+                        }
+                    }while (!cont2);
                     break;
             // Chance
                 case 24:

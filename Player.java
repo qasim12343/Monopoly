@@ -5,7 +5,7 @@ public class Player {
     int numberOfCinemas = 0;
     int numberOfGrounds = 0;
     int numberOfHouses = 0;
-
+    int chanceToRelease = 0;
     int numberOfCell = 1;
     String name;
 
