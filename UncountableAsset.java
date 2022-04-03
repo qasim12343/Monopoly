@@ -2,16 +2,24 @@ import java.util.Scanner;
 
 public class UncountableAsset {
     Scanner input = new Scanner(System.in);
-    Player player;
-    public UncountableAsset(Player player) {
-        this.player = player;
-    }
-    public UncountableAsset(){}
+
 }
-
-
+class LowBalance extends Exception{
+    public LowBalance() {
+        super("You do not have enough money");
+    }
+}
+class WrongInput extends Exception{
+    public WrongInput() {
+        super("Wrong input! try again");
+    }
+}
 class AirPort extends UncountableAsset {
-    public void buyTicket(){
+
+
+    public void buyTicket(Player player) throws LowBalance, WrongInput {
+        if(player.balance < 50)
+            throw new LowBalance();
         player.balance -= 50;
         System.out.println("Choose location to travel");
         if(player.numberOfCell == 3) System.out.println("11 or 20");
@@ -24,76 +32,95 @@ class AirPort extends UncountableAsset {
             case 3 -> player.numberOfCell = 3;
             case 11 -> player.numberOfCell = 11;
             case 20 -> player.numberOfCell = 20;
-            default -> throw new ArithmeticException("wrong input");  /// must be defined an exception
+            default -> throw new WrongInput();  /// must be defined an exception
         }
     }
-    public void goOn(){
-        player.numberOfCell++;
-    }
-}
-
-class Tax extends UncountableAsset {
-    public void payTax(){
-        player.balance -= player.balance*10/100;
-    }
-
 }
 
 class Chance extends UncountableAsset {
-    public void getMoney(){
+
+    public void getMoney(Player player){
         player.balance+=200;
     }
-    public void goToPrison(){
+    public void goToPrison(Player player){
         player.numberOfCell = 13;
     }
-    public void payToBank(){
+    public void payToBank(Player player){
         player.balance -= player.balance*10/100;
     }
-    public void goThreeCellsAhead(){
+    public void goThreeCellsAhead(Player player){
         player.numberOfCell+=3;
     }
-    public void chanceToReleasePrison(){ ///must be completed
+    public void chanceToReleasePrison(){ ///must be complete
 
     }
-
-
-}
-
-class Award extends UncountableAsset {
-    public void addBalance(){
-        player.balance +=200;
-    }
-
-}
-
-class Road extends UncountableAsset {
-    public void pay(){
-        player.balance -= 100;
-    }
-
 }
 
 class Prison extends UncountableAsset {
+
 
 }
 
 class Ground extends UncountableAsset {
     Player Owner;
-
-    public void setOwner() {
+    public void setOwner(Player player) {
         player.balance -= 100;
         Owner = player;
     }
 }
-class cinema extends UncountableAsset {
+
+class Cinema extends UncountableAsset {
     int number;
     Player owner;
-    public void payToOwner(){
 
+
+    public void payToOwner(Player player) throws LowBalance {
+        if(!player.equals(owner)){
+            if(owner.numberOfCinemas == 1){
+                if(player.balance >= 25){
+                    owner.balance += 25;
+                    player.balance -= 25;
+                }else
+                    throw new LowBalance();
+            }
+            else if(owner.numberOfCinemas == 2){
+                if(player.balance >= 50){
+                    owner.balance += 50;
+                    player.balance -= 50;
+                }else
+                    throw new LowBalance();
+            }
+            else if(owner.numberOfCinemas >= 3){
+                if(player.balance >= 100){
+                    owner.balance += 100;
+                    player.balance -= 100;
+                }else
+                    throw new LowBalance();
+            }
+        }
     }
-    public void setOwner() {
-        player.balance -= 100;
+    public void setOwner(Player player) throws LowBalance {
+        if(player.balance < 200)
+            throw new LowBalance();
+        player.balance -= 200;
+        player.numberOfCinemas++;
         owner = player;
+    }
+}
+class Bank {
+    void deposit(Player player){
+        if(player.balance <= 1)
+            System.out.println("Your balance is low");
+        else{
+            player.balance -= player.balance/2;
+            player.depositCard++;
+        }
+    }
+    void useDepositCard(Player player){
+        if(player.depositCard>=1)
+            player.balance += player.depositRemain*2;
+        else
+            System.out.println("You don't have enough card");
     }
 }
 

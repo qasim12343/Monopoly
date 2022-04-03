@@ -5,6 +5,9 @@ public class Board {
     Player[] player;
     Scanner in = new Scanner(System.in);
     int sizeOfPlayer;
+    AirPort airPort = new AirPort();
+    Cinema[] cinemas = new Cinema[4];
+    Ground[] grounds = new Ground[8];
 
     public Board(int sizeOfPlayer) {
         this.sizeOfPlayer = sizeOfPlayer;
@@ -22,7 +25,7 @@ class test {
     public static Board b1;
     public static Scanner input = new Scanner(System.in);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         String command = input.next();
         if (!command.equals("create_game"))
             System.out.println("no game created");
@@ -30,8 +33,37 @@ class test {
             create_game();
 
     }
+    public static void showCommands(){
+        System.out.println("Enter your command: 1-build, 2-buy, 3-sell, 4-fly\n" +
+                "5-free, 6-invest, 7-index, 8-property, 9-time, 10-rank");
+    }
+    public static void doCinemaCommands(Cinema cinema,Player player){
+        boolean cont1 = true;
+        do {
+            try {
+                if (cinema.owner == null) {
+                    System.out.println("1-buy  2-go ahead");
+                    switch (input.nextInt()) {
+                        case 1:
+                            cinema.setOwner(player);
+                            break;
+                        case 2:
+                            player.numberOfCell++;
+                            break;
+                        default: throw new WrongInput();
+                    }
+                }else
+                    cinema.payToOwner(player);
+            } catch (WrongInput e1) {
+                cont1 = false;
+            } catch (LowBalance l) {
+                System.out.println(l.getMessage());
+                System.out.println("Choose the property that you want to sell");
+            }
+        } while (!cont1);
+    }
 
-    public static void create_game() {
+    public static void create_game() throws Exception {
         System.out.println("Enter number of players");
         int size = input.nextInt();
         while (size < 2 || size > 4) {
@@ -39,131 +71,105 @@ class test {
             size = input.nextInt();
         }
         b1 = new Board(size);
+        
+        int countRound = 1;
+        System.out.println("round " + countRound);
 
-        if (input.next().equals("start_game")) {
-            int countRound = 1;
-            System.out.println("round " + countRound);
+        int turn = 0;
+        do {
+            Player currentPlayer = b1.player[turn];
+            System.out.println(currentPlayer.name + "'s turn");
+            System.out.println("Enter dice number");
+            int dice = input.nextInt();
+            while (dice > 6 || dice < 1) {
+                System.out.println("try again");
+                dice = input.nextInt();
+            }
+            currentPlayer.numberOfCell += dice;
 
-            int turn = 0;
-            do {
-                System.out.println(b1.player[turn].name + "'s turn");
-                System.out.println("Enter dice number");
-                int dice = input.nextInt();
-                while (dice > 6 || dice < 1) {
-                    System.out.println("try again");
-                    dice = input.nextInt();
-                }
-                b1.player[turn].numberOfCell += dice;
+            if (currentPlayer.numberOfCell > 24) {
+                countRound++;
+                currentPlayer.numberOfCell = 1;
+            }
 
-                if (b1.player[turn].numberOfCell > 24) {
-                    countRound++;
-                    b1.player[turn].numberOfCell = 1;
-                }
+            switch (currentPlayer.numberOfCell) {
 
-                switch (b1.player[turn].numberOfCell) {
-                //Parking
-                    case 1:
-                        System.out.println("Enter your command: 1-build, 2-buy, 3-sell, 4-fly\n" +
-                                "5-free, 6-invest, 7-index, 8-property, 9-time, 10-rank");
+            //Parking
+                case 1:
+                    break;
+
+            //Airport
+                case 3:
+                case 11:
+                case 20:
+                    boolean cont = true;
+                    do{
+                        System.out.println("1-buy a ticket to travel\n2-go on");
                         switch (input.nextInt()) {
-                            case 1:
-                                break;
-                            case 2:
-                                break;
-                            case 3:
-                                break;
-                            case 4:
-                                break;
-                            case 5:
-                                break;
-                            case 6:
-                                break;
-                            case 7:
-                                break;
-                            case 8:
-                                break;
-                            case 9:
-                                break;
-                            case 10:
-                                break;
-
+                            case 1: b1.airPort.buyTicket(currentPlayer);break;
+                            case 2: break;
                             default:
-                                System.out.println("wrong command");
-                                break;
+                                cont = false;
                         }
-                        break;
-                    case 2:
-                        b1.player[turn].balance -= 100;
-                        break;
-                //Airport
-                    case 3:
-                    case 11:
-                    case 20:
-                        b1.player[turn].balance -= 300;
-                        break;
-                //Cinema
-                    case 4:
-                    case 8:
-                    case 15:
-                        b1.player[turn].balance -= 400;
-                        break;
-                //Road
-                    case 5:
-                    case 10:
-                    case 16:
-                        b1.player[turn].balance -= 500;
-                        break;
-                //Award
-                    case 6:
-                        b1.player[turn].balance -= 110;
-                        break;
-                //Grounds
-                    case 7:
-                        b1.player[turn].balance -= 120;
-                        break;
-                    case 9:
-                        b1.player[turn].balance -= 10;
-                        break;
-                    case 12:
-                        b1.player[turn].balance -= 105;
-                        break;
-                    case 13:
-                        b1.player[turn].balance -= 101;
-                        break;
-                    case 14:
-                        b1.player[turn].balance -= 301;
-                        break;
+                    }while (!cont);
 
-                    case 17:
-                        b1.player[turn].balance -= 60;
-                        break;
-                    case 18:
-                        b1.player[turn].balance -= 70;
-                        break;
-                    case 19:
-                        b1.player[turn].balance -= 80;
-                        break;
+            //Cinema
+                case 4:
+                    doCinemaCommands(b1.cinemas[0], currentPlayer );break;
+                case 8:
+                    doCinemaCommands(b1.cinemas[1], currentPlayer );break;
+                case 15:
+                    doCinemaCommands(b1.cinemas[2], currentPlayer );break;
+                case 22:
+                    doCinemaCommands(b1.cinemas[3], currentPlayer );break;
+            //Road
+                case 5:
+                case 10:
+                case 16:
+                    currentPlayer.balance -= 100;
+                    break;
+            //Award
+                case 6:
+                    currentPlayer.balance += 200;
+                    break;
+            //Grounds
+                case 2:
 
-                    case 21:
-                        break;
-                    case 22:
-                        b1.player[turn].balance -= 100;
-                        break;
-                    case 23:
-                        b1.player[turn].balance -= 100;
-                        break;
-                // Chance
-                    case 24:
-                        b1.player[turn].balance -= 100;
-                        break;
-                }
-                System.out.println(b1.player[turn].name + "'s balance: " + b1.player[turn].balance);
-                System.out.println(b1.player[turn].name + "'s cell number: " + b1.player[turn].numberOfCell + "\n");
-                turn++;
-                if (turn >= b1.sizeOfPlayer)
-                    turn = 0;
-            } while (winner());
-        }
+                    break;
+                case 7:
+                case 9:
+                case 12:
+                case 14:
+                case 18:
+                case 19:
+                    currentPlayer.balance -= 80;
+                    break;
+                case 23:
+                    currentPlayer.balance -= 100;
+                    break;
+            //Bank
+                case 21:
+                    break;
+            // Tax
+                case 17:
+                    currentPlayer.balance -= currentPlayer.balance*10/100;
+                    break;
+            //Prison
+                case 13:
+                    currentPlayer.balance -= 101;
+                    break;
+            // Chance
+                case 24:
+                    currentPlayer.balance -= 100;
+                    break;
+            }
+            System.out.println(currentPlayer.name + "'s balance: " + currentPlayer.balance);
+            System.out.println(currentPlayer.name + "'s cell number: " + currentPlayer.numberOfCell + "\n");
+            turn++;
+            if (turn >= b1.sizeOfPlayer)
+                turn = 0;
+        } while (winner());
+
     }
 
     public static boolean winner() {
