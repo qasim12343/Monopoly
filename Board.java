@@ -5,9 +5,9 @@ public class Board {
     Player[] player;
     Scanner in = new Scanner(System.in);
     int sizeOfPlayer;
-    AirPort airPort = new AirPort();
-    Cinema[] cinemas = {new Cinema(), new Cinema(), new Cinema(), new Cinema()};
-    Ground[] grounds = {new Ground(),new Ground(),new Ground(),new Ground(),new Ground(),new Ground(),new Ground(),new Ground()};
+    AirPort airPort = new AirPort(31120);
+    Cinema[] cinemas = {new Cinema(4), new Cinema(8), new Cinema(15), new Cinema(22)};
+    Ground[] grounds = {new Ground(2),new Ground(7),new Ground(9),new Ground(12),new Ground(14),new Ground(18),new Ground(19),new Ground(23)};
 
     public Board(int sizeOfPlayer) {
         this.sizeOfPlayer = sizeOfPlayer;
@@ -33,10 +33,7 @@ class test {
             create_game();
 
     }
-    public static void showCommands(){
-        System.out.println("Enter your command: 1-build, 2-buy, 3-sell, 4-fly\n" +
-                "5-free, 6-invest, 7-index, 8-property, 9-time, 10-rank");
-    }
+    
     public static void doCinemaCommands(Cinema cinema,Player player){
         boolean cont1 = true;
         do {
@@ -46,9 +43,9 @@ class test {
                     switch (input.nextInt()) {
                         case 1:
                             cinema.setOwner(player);
+                            player.cinemas.add(cinema);
                             break;
                         case 2:
-                            player.numberOfCell++;
                             break;
                         default: throw new WrongInput();
                     }
@@ -59,6 +56,43 @@ class test {
             } catch (LowBalance l) {
                 System.out.println(l.getMessage());
                 System.out.println("Choose the property that you want to sell");
+                player.sellProperty();                                          // sell 
+                cont1 = false;
+            }
+        } while (!cont1);
+    }
+    public static void doGroundCommands(Ground ground, Player player){
+        boolean cont1 = true;
+        do {
+            try {
+                System.out.println("1-buy  2-build ");
+                switch (input.nextInt()) {
+                    case 1:
+                        if(!ground.owner.name.equals("Bank")){
+                            System.out.println("you can not buy");
+                            cont1 = false;
+                        }else {
+                            ground.setOwner(player);
+                            player.grounds.add(ground);
+                        }
+                        break;
+                    case 2: 
+                        if(player.equals(ground.owner)){
+                        ground.build(player);
+                        }else {
+                            System.out.println("You can not build");
+                            cont1 = false;
+                        }
+                        break;
+                    default: throw new WrongInput();
+                }
+            } catch (WrongInput e1) {
+                cont1 = false;
+            } catch (LowBalance l) {
+                System.out.println(l.getMessage());
+                System.out.println("Choose the property that you want to sell");
+                player.sellProperty();                                          // sell 
+                cont1 = false;
             }
         } while (!cont1);
     }
@@ -85,11 +119,11 @@ class test {
                 System.out.println("try again");
                 dice = input.nextInt();
             }
-            if(currentPlayer.numberOfCell == 13){
+            if(currentPlayer.index == 13){
                 if (dice == 1)
-                    currentPlayer.numberOfCell += dice;
+                    currentPlayer.index += dice;
             }else {
-                currentPlayer.numberOfCell += dice;
+                currentPlayer.index += dice;
                 if(dice == 6){
                     System.out.println("Enter dice number");
                     dice = input.nextInt();
@@ -97,18 +131,18 @@ class test {
                         System.out.println("try again");
                         dice = input.nextInt();
                     }if(dice == 6)
-                        currentPlayer.numberOfCell = 13;
+                        currentPlayer.index = 13;
                     else
-                        currentPlayer.numberOfCell += dice;
+                        currentPlayer.index += dice;
                 }
             }
 
-            if (currentPlayer.numberOfCell > 24) {
+            if (currentPlayer.index > 24) {
                 countRound++;
-                currentPlayer.numberOfCell = 1;
+                currentPlayer.index = 1;
             }
 
-            switch (currentPlayer.numberOfCell) {
+            switch (currentPlayer.index) {
 
             //Parking
                 case 1:
@@ -161,18 +195,18 @@ class test {
                     break;
             //Grounds
                 case 2:
-                    break;
+                    doGroundCommands(b1.grounds[0], currentPlayer);break;
                 case 7:
+                    doGroundCommands(b1.grounds[1], currentPlayer);break;
                 case 9:
+                    doGroundCommands(b1.grounds[2], currentPlayer);break;
                 case 12:
-                case 14:
-                case 18:
-                case 19:
-                    currentPlayer.balance -= 80;
-                    break;
-                case 23:
-                    currentPlayer.balance -= 100;
-                    break;
+                    doGroundCommands(b1.grounds[3], currentPlayer);break;
+                case 14:doGroundCommands(b1.grounds[4], currentPlayer);break;
+                case 18:doGroundCommands(b1.grounds[5], currentPlayer);break;
+                case 19:doGroundCommands(b1.grounds[6], currentPlayer);break;
+                case 23:doGroundCommands(b1.grounds[7], currentPlayer);break;
+                    
             //Bank
                 case 21:
                     break;
@@ -180,9 +214,10 @@ class test {
                 case 17:
                     if(currentPlayer.balance*10/100 > currentPlayer.balance)
                         System.out.println("1-sell property");
-                    System.out.println("Cost "+currentPlayer.balance*10/100+ " for the tax");
-                    currentPlayer.balance -= currentPlayer.balance*10/100;
-                    break;
+                    else {
+                        System.out.println("Cost " + currentPlayer.balance * 10 / 100 + " for the tax");
+                        currentPlayer.balance -= currentPlayer.balance * 10 / 100;
+                    }break;
             //Prison
                 case 13:
                     boolean cont2 = true;
@@ -192,7 +227,7 @@ class test {
                         switch (input.nextInt()) {
                             case 1:
                                 if(currentPlayer.chanceToRelease >=1){
-                                    currentPlayer.numberOfCell++;break;
+                                    currentPlayer.index++;break;
                                 } else{
                                     System.out.println("You do not have enough card!");
                                     cont2 = false;
@@ -220,7 +255,7 @@ class test {
                                     }
                                 }else{
                                     currentPlayer.balance-=50;
-                                    currentPlayer.numberOfCell++;
+                                    currentPlayer.index++;
                                 }
                                 break;
                         }
@@ -232,7 +267,7 @@ class test {
                     break;
             }
             System.out.println(currentPlayer.name + "'s balance: " + currentPlayer.balance);
-            System.out.println(currentPlayer.name + "'s cell number: " + currentPlayer.numberOfCell + "\n");
+            System.out.println(currentPlayer.name + "'s cell number: " + currentPlayer.index + "\n");
             turn++;
             if (turn >= b1.sizeOfPlayer)
                 turn = 0;
