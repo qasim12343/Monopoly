@@ -65,7 +65,8 @@ class test {
         boolean cont1 = true;
         do {
             try {
-                System.out.println("1-buy  2-build ");
+                System.out.println(ground.name+"'s "+ground.owner.name);
+                System.out.println("1-buy  2-build  3-go ahead ");
                 switch (input.nextInt()) {
                     case 1:
                         if(!ground.owner.name.equals("Bank")){
@@ -73,7 +74,7 @@ class test {
                             cont1 = false;
                         }else {
                             ground.setOwner(player);
-                            player.grounds.add(ground);
+                            player.grounds.add(ground);break;
                         }
                         break;
                     case 2: 
@@ -84,6 +85,7 @@ class test {
                             cont1 = false;
                         }
                         break;
+                    case 3: break;
                     default: throw new WrongInput();
                 }
             } catch (WrongInput e1) {
@@ -154,7 +156,8 @@ class test {
                 case 20:
                     boolean cont = true;
                     do{
-                        System.out.println("1-buy a ticket to travel\n2-go on");
+                        System.out.println("You are in Airport");
+                        System.out.println("1-buy a ticket to travel   2-go on");
                         switch (input.nextInt()) {
                             case 1:
                                 try {

@@ -110,8 +110,9 @@ class Ground extends Property {
                     }
                     if(numberOfHouses == 4){
                         player.balance -= 100;
-                        isHotel = true;
-                    }
+                        isHotel = true;break;
+                    }else
+                        System.out.println("Your number of houses not enough");
                     break;
                 default: throw new WrongInput();
             }
