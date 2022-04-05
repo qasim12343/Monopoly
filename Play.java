@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Board {
+class Board {
 
     Player[] player;
     Scanner in = new Scanner(System.in);
@@ -21,7 +21,7 @@ public class Board {
 
 }
 
-class test {
+ public class Play {
     public static Board b1;
     public static Scanner input = new Scanner(System.in);
 
@@ -55,48 +55,61 @@ class test {
                 cont1 = false;
             } catch (LowBalance l) {
                 System.out.println(l.getMessage());
-                System.out.println("Choose the property that you want to sell");
                 player.sellProperty();                                          // sell 
                 cont1 = false;
             }
         } while (!cont1);
     }
-    public static void doGroundCommands(Ground ground, Player player){
-        boolean cont1 = true;
-        do {
+
+    public static void doGroundCommands(Ground ground, Player player) {
+
+        if (!ground.owner.name.equals("Bank") && !ground.owner.equals(player)) {
             try {
-                System.out.println(ground.name+"'s "+ground.owner.name);
-                System.out.println("1-buy  2-build  3-go ahead ");
-                switch (input.nextInt()) {
-                    case 1:
-                        if(!ground.owner.name.equals("Bank")){
-                            System.out.println("you can not buy");
-                            cont1 = false;
-                        }else {
-                            ground.setOwner(player);
-                            player.grounds.add(ground);break;
-                        }
-                        break;
-                    case 2: 
-                        if(player.equals(ground.owner)){
-                        ground.build(player);
-                        }else {
-                            System.out.println("You can not build");
-                            cont1 = false;
-                        }
-                        break;
-                    case 3: break;
-                    default: throw new WrongInput();
-                }
-            } catch (WrongInput e1) {
-                cont1 = false;
-            } catch (LowBalance l) {
-                System.out.println(l.getMessage());
-                System.out.println("Choose the property that you want to sell");
-                player.sellProperty();                                          // sell 
-                cont1 = false;
+                ground.payToOwner(player);
+            } catch (LowBalance e) {
+                player.sellProperty();
             }
-        } while (!cont1);
+        }
+
+        else{
+            boolean cont1 = true;
+            do {
+                try {
+                    System.out.println(ground.name + "'s " + ground.owner.name);
+                    System.out.println("1-buy  2-build  3-go ahead ");
+                    switch (input.nextInt()) {
+                        case 1:
+                            if (!ground.owner.name.equals("Bank")) {
+                                System.out.println("you can not buy");
+                                cont1 = false;
+                            } else {
+                                ground.setOwner(player);
+                                player.grounds.add(ground);
+                                break;
+                            }
+                            break;
+                        case 2:
+                            if (player.equals(ground.owner)) {
+                                ground.build(player);
+                            } else {
+                                System.out.println("You can not build");
+                                cont1 = false;
+                            }
+                            break;
+                        case 3:
+                            break;
+                        default:
+                            throw new WrongInput();
+                    }
+                } catch (WrongInput e1) {
+                    cont1 = false;
+                } catch (LowBalance l) {
+                    System.out.println(l.getMessage());
+                    player.sellProperty();
+                    cont1 = false;
+                }
+            } while (!cont1);
+        }
     }
 
     public static void create_game() {
@@ -189,12 +202,12 @@ class test {
                 case 10:
                 case 16:
                     System.out.println("Cost 100 $ for road");
-                    currentPlayer.balance -= 100;
+                    currentPlayer.addBalance(-100);
                     break;
             //Award
                 case 6:
                     System.out.println("Achieve 200 from award");
-                    currentPlayer.balance += 200;
+                    currentPlayer.addBalance(200);
                     break;
             //Grounds
                 case 2:
@@ -215,11 +228,11 @@ class test {
                     break;
             // Tax
                 case 17:
-                    if(currentPlayer.balance*10/100 > currentPlayer.balance)
+                    if(currentPlayer.getBalance()*10/100 > currentPlayer.getBalance())
                         System.out.println("1-sell property");
                     else {
-                        System.out.println("Cost " + currentPlayer.balance * 10 / 100 + " for the tax");
-                        currentPlayer.balance -= currentPlayer.balance * 10 / 100;
+                        System.out.println("Cost " + currentPlayer.getBalance() * 10 / 100 + " for the tax");
+                        currentPlayer.addBalance(-currentPlayer.getBalance() * 10 / 100);
                     }break;
             //Prison
                 case 13:
@@ -237,7 +250,7 @@ class test {
                                 }break;
 
                             case 2:
-                                if (currentPlayer.balance < 10){
+                                if (currentPlayer.getBalance() < 10){
                                     System.out.println("You do not have enough money to pay");
                                     System.out.println("1- Use another option\n2-sell property");    ///sell
                                     switch (input.nextInt()){
@@ -246,10 +259,10 @@ class test {
                                     }
                                 }
                                 else
-                                    currentPlayer.balance -= 10;
+                                    currentPlayer.addBalance(-10);
                                 break;
                             case 3:
-                                if (currentPlayer.balance < 50){
+                                if (currentPlayer.getBalance() < 50){
                                     System.out.println("You do not have enough money to pay");
                                     System.out.println("1- Use another option\n2-sell property");    ///sell
                                     switch (input.nextInt()){
@@ -257,7 +270,7 @@ class test {
                                         case 2:break;
                                     }
                                 }else{
-                                    currentPlayer.balance-=50;
+                                    currentPlayer.addBalance(-50);
                                     currentPlayer.index++;
                                 }
                                 break;
@@ -266,10 +279,10 @@ class test {
                     break;
             // Chance
                 case 24:
-                    currentPlayer.balance -= 100;
+                    currentPlayer.addBalance(-100);
                     break;
             }
-            System.out.println(currentPlayer.name + "'s balance: " + currentPlayer.balance);
+            System.out.println(currentPlayer.name + "'s balance: " + currentPlayer.getBalance());
             System.out.println(currentPlayer.name + "'s cell number: " + currentPlayer.index + "\n");
             turn++;
             if (turn >= b1.sizeOfPlayer)
@@ -281,7 +294,7 @@ class test {
     public static boolean winner() {
 
         for (int i = 0; i < b1.sizeOfPlayer; i++) {
-            if (b1.player[i].balance <= 10) {
+            if (b1.player[i].getBalance() <= 10) {
                 b1.sizeOfPlayer--;
                 System.out.println("Player " + (i + 1) + " lost\n");
                 for (int j = i; j < b1.sizeOfPlayer; j++) {

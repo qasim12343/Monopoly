@@ -29,9 +29,9 @@ class AirPort extends Property {
     }
 
     public void buyTicket(Player player) throws LowBalance, WrongInput {
-        if(player.balance < 50)
+        if(player.getBalance() < 50)
             throw new LowBalance();
-        player.balance -= 50;
+        player.addBalance(-50);
         System.out.println("Choose location to travel");
         if(player.index == 3) System.out.println("11 or 20");
         else if(player.index == 11) System.out.println("3 or 20");
@@ -51,13 +51,13 @@ class AirPort extends Property {
 class Chance  {
     
     public void getMoney(Player player){
-        player.balance+=200;
+        player.addBalance(200);
     }
     public void goToPrison(Player player){
         player.index = 13;
     }
     public void payToBank(Player player){
-        player.balance -= player.balance*10/100;
+        player.addBalance(-player.getBalance()*10/100);
     }
     public void goThreeCellsAhead(Player player){
         player.index+=3;
@@ -80,9 +80,9 @@ class Ground extends Property {
     }
 
     public void setOwner(Player player) throws LowBalance {
-        if(player.balance < 100)
+        if(player.getBalance() < 200)
             throw new LowBalance();
-        player.balance -= 200;
+        player.addBalance(-200);
         owner = player;
     }
     public void build(Player player) throws LowBalance, WrongInput {
@@ -95,27 +95,46 @@ class Ground extends Property {
                     System.out.println("You can not build it is max");
                     con = false;
                     }
-                    else if(player.balance < 150){
+                    else if(player.getBalance() < 150){
                         throw new LowBalance();
                     }
                     else{
-                        player.balance -= 150;
+                        player.addBalance(-150);
                         numberOfHouses++;
                         setName("House");}
                     break;
                     
                 case 2:
-                    if(player.balance < 100){
+                    if(player.getBalance() < 100){
                         throw new LowBalance();
                     }
                     if(numberOfHouses == 4){
-                        player.balance -= 100;
+                        player.addBalance(-100);
                         isHotel = true;break;
                     }else
                         System.out.println("Your number of houses not enough");
                     break;
                 default: throw new WrongInput();
             }
+        }
+    }
+    public void payToOwner(Player player) throws LowBalance {
+        if(!player.equals(owner)){
+            if(numberOfHouses > 0){
+                if(player.getBalance() >= numberOfHouses*100+50){
+                    owner.addBalance(numberOfHouses*100+50);
+                    player.addBalance(-numberOfHouses*100+50);
+                }else
+                    throw new LowBalance();
+            }
+            else if(isHotel){
+                if(player.getBalance() >= 600){
+                    owner.addBalance(600);
+                    player.addBalance(-600);
+                }else
+                    throw new LowBalance();
+            }
+            else owner.addBalance(50);
         }
     }
 }
@@ -129,55 +148,45 @@ class Cinema extends Property {
 
     public void payToOwner(Player player) throws LowBalance {
         if(!player.equals(owner)){
-            if(owner.cinemas.size() == 1){
-                if(player.balance >= 25){
-                    owner.balance += 25;
-                    player.balance -= 25;
-                }else
-                    throw new LowBalance();
-            }
-            else if(owner.cinemas.size() == 2){
-                if(player.balance >= 50){
-                    owner.balance += 50;
-                    player.balance -= 50;
+            if(owner.cinemas.size() == 1 || owner.cinemas.size() == 2){
+                if(player.getBalance() >= owner.cinemas.size()*25){
+                    owner.addBalance(owner.cinemas.size()*25);
+                    player.addBalance(-25*owner.cinemas.size());
                 }else
                     throw new LowBalance();
             }
             else if(owner.cinemas.size() >= 3){
-                if(player.balance >= 100){
-                    owner.balance += 100;
-                    player.balance -= 100;
+                if(player.getBalance() >= 100){
+                    owner.addBalance(100);
+                    player.addBalance(-100);
                 }else
                     throw new LowBalance();
             }
         }
     }
     public void setOwner(Player player) throws LowBalance {
-        if(player.balance < 200)
+        if(player.getBalance() < 200)
             throw new LowBalance();
-        player.balance -= 200;
+        player.addBalance(-200);
         owner = player;
     }
 }
 
 class Bank {
     void deposit(Player player) throws LowBalance {
-        if(player.balance <= 1)
+        if(player.getBalance() <= 1)
             throw new LowBalance();
         else{
-            player.balance -= player.balance/2;
+            player.addBalance(-player.getBalance()/2);
             player.depositCard++;
         }
     }
     void useDepositCard(Player player) throws WrongInput {
         if(player.depositCard>=1)
-            player.balance += player.depositRemain*2;
+            player.addBalance(player.depositRemain*2);
         else{
             System.out.println("You don't have enough card");
             throw new WrongInput();
         }
     }
 }
-
-
-
