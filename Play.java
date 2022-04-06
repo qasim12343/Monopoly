@@ -1,27 +1,8 @@
+import java.util.Random;
 import java.util.Scanner;
 
-class Board {
-
-    Player[] player;
-    Scanner in = new Scanner(System.in);
-    int sizeOfPlayer;
-    AirPort airPort = new AirPort(31120);
-    Cinema[] cinemas = {new Cinema(4), new Cinema(8), new Cinema(15), new Cinema(22)};
-    Ground[] grounds = {new Ground(2),new Ground(7),new Ground(9),new Ground(12),new Ground(14),new Ground(18),new Ground(19),new Ground(23)};
-
-    public Board(int sizeOfPlayer) {
-        this.sizeOfPlayer = sizeOfPlayer;
-        player = new Player[sizeOfPlayer];
-        for (int i = 0; i < sizeOfPlayer; i++) {
-            System.out.println("Enter player " + (i + 1) + " name");
-            String name = in.next();
-            player[i] = new Player(name);//set names
-        }
-    }
-
-}
-
- public class Play {
+public class Play {
+    static boolean Continue = true;
     public static Board b1;
     public static Scanner input = new Scanner(System.in);
 
@@ -228,8 +209,19 @@ class Board {
                     break;
             // Tax
                 case 17:
-                    if(currentPlayer.getBalance()*10/100 > currentPlayer.getBalance())
-                        System.out.println("1-sell property");
+                    if(currentPlayer.getBalance()*10/100 > currentPlayer.getBalance()){
+                        System.out.println("1-sell property  2-use taxCard");
+                        boolean con = true;
+                        do{
+                            switch (input.nextInt()){
+                                case 1 : currentPlayer.sellProperty();break;
+                                case 2 : if(currentPlayer.TaxCard >= 1){
+                                    currentPlayer.TaxCard--;
+                                    }else System.out.println("You do not have taxCard");break;
+                                default: con = false;
+                            }
+                        }while (!con);
+                    }
                     else {
                         System.out.println("Cost " + currentPlayer.getBalance() * 10 / 100 + " for the tax");
                         currentPlayer.addBalance(-currentPlayer.getBalance() * 10 / 100);
@@ -237,12 +229,13 @@ class Board {
             //Prison
                 case 13:
                     boolean cont2 = true;
+                    System.out.println("You are in prison");
                     do{
-                        System.out.println("You are in prison");
                         System.out.println("1-release by chanceCard\n2-stay  3-pay 50 $ to release");
                         switch (input.nextInt()) {
                             case 1:
                                 if(currentPlayer.chanceToRelease >=1){
+                                    currentPlayer.chanceToRelease--;
                                     currentPlayer.index++;break;
                                 } else{
                                     System.out.println("You do not have enough card!");
@@ -279,11 +272,22 @@ class Board {
                     break;
             // Chance
                 case 24:
-                    currentPlayer.addBalance(-100);
+                    System.out.println("Chance cell");
+                    switch (new Random().nextInt(6)){
+                        case 0 : b1.chance.getMoney(currentPlayer);break;
+                        case 1 : b1.chance.goToPrison(currentPlayer);break;
+                        case 2 : b1.chance.payToBank(currentPlayer);break;
+                        case 3 : b1.chance.goThreeCellsAhead(currentPlayer);break;
+                        case 4 : b1.chance.chanceToReleasePrison(currentPlayer);break;
+                        case 5 : b1.chance.TaxCard(currentPlayer);break;
+                        case 6 : b1.chance.pay10$ToPlayers(b1.player, b1.sizeOfPlayer, currentPlayer);break;
+
+                    }
                     break;
             }
-            System.out.println(currentPlayer.name + "'s balance: " + currentPlayer.getBalance());
-            System.out.println(currentPlayer.name + "'s cell number: " + currentPlayer.index + "\n");
+            for (int i = 0; i < b1.sizeOfPlayer; i++) {
+                System.out.print(b1.showDetails(b1.player[i])+"|");
+            }
             turn++;
             if (turn >= b1.sizeOfPlayer)
                 turn = 0;

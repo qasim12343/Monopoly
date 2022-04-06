@@ -51,19 +51,34 @@ class AirPort extends Property {
 class Chance  {
     
     public void getMoney(Player player){
+        System.out.println(" Your chance card is 200$");
         player.addBalance(200);
     }
     public void goToPrison(Player player){
+        System.out.println("Your chance card is prison ");
         player.index = 13;
     }
     public void payToBank(Player player){
+        System.out.println("Your chance card is 10% tax");
         player.addBalance(-player.getBalance()*10/100);
     }
     public void goThreeCellsAhead(Player player){
+        System.out.println("Your chance card is three cell go ahead");
         player.index+=3;
     }
     public void chanceToReleasePrison(Player player){
+        System.out.println("Your chance card is a chanceToReleaseCard");
         player.chanceToRelease++;
+    }
+    public void TaxCard(Player player){
+        System.out.println("Your chance card a taxCard");
+        player.TaxCard++;}
+    public void pay10$ToPlayers(Player[] players, int size, Player currentPlayer){
+        System.out.println("Your chance card is 10$ to every player");
+        for (int i = 0; i < size; i++) {
+            players[i].addBalance(10);
+            currentPlayer.addBalance(-10);
+        }
     }
 }
 

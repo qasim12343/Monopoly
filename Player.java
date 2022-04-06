@@ -6,6 +6,7 @@ public class Player {
     int depositCard = 0;
     int depositRemain = 0;
     int chanceToRelease = 0;
+    int TaxCard = 0;
     int index = 1;
     ArrayList<Cinema> cinemas = new ArrayList<>();
     ArrayList<Ground> grounds = new ArrayList<>();
