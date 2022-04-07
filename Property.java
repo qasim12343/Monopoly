@@ -33,17 +33,17 @@ class AirPort extends Property {
             throw new LowBalance();
         player.addBalance(-50);
         System.out.println("Choose location to travel");
-        if(player.index == 3) System.out.println("11 or 20");
-        else if(player.index == 11) System.out.println("3 or 20");
-        else if(player.index == 20) System.out.println("3 or 11");
+        if(player.getIndex() == 3) System.out.println("11 or 20");
+        else if(player.getIndex() == 11) System.out.println("3 or 20");
+        else if(player.getIndex() == 20) System.out.println("3 or 11");
 
         int inp = input.nextInt();
 
         switch (inp) {
-            case 3 -> player.index = 3;
-            case 11 -> player.index = 11;
-            case 20 -> player.index = 20;
-            default -> throw new WrongInput();  /// must be defined an exception
+            case 3 -> player.setIndex(3);
+            case 11 -> player.setIndex(11);
+            case 20 -> player.setIndex(20);
+            default -> throw new WrongInput();
         }
     }
 }
@@ -56,7 +56,7 @@ class Chance  {
     }
     public void goToPrison(Player player){
         System.out.println("Your chance card is prison ");
-        player.index = 13;
+        player.setIndex(13);
     }
     public void payToBank(Player player){
         System.out.println("Your chance card is 10% tax");
@@ -64,15 +64,16 @@ class Chance  {
     }
     public void goThreeCellsAhead(Player player){
         System.out.println("Your chance card is three cell go ahead");
-        player.index+=3;
+        player.setIndex(player.getIndex()+3);
     }
     public void chanceToReleasePrison(Player player){
         System.out.println("Your chance card is a chanceToReleaseCard");
-        player.chanceToRelease++;
+        player.setChanceToRelease(player.getChanceToRelease() + 1);
     }
     public void TaxCard(Player player){
         System.out.println("Your chance card a taxCard");
-        player.TaxCard++;}
+        player.setTaxCard(player.getTaxCard()+1);
+    }
     public void pay10$ToPlayers(Player[] players, int size, Player currentPlayer){
         System.out.println("Your chance card is 10$ to every player");
         for (int i = 0; i < size; i++) {
@@ -95,17 +96,18 @@ class Ground extends Property {
     }
 
     public void setOwner(Player player) throws LowBalance {
-        if(player.getBalance() < 200)
+        if(player.getBalance() < 100)
             throw new LowBalance();
-        player.addBalance(-200);
+        player.addBalance(-100);
         owner = player;
     }
     public void build(Player player) throws LowBalance, WrongInput {
+
         boolean con = true;
-        while (con){
+        do{
             System.out.println("1- build house 2-change to hotel");
             switch (input.nextInt()){
-                case 1: 
+                case 1:
                     if(numberOfHouses >= 4){
                     System.out.println("You can not build it is max");
                     con = false;
@@ -116,7 +118,8 @@ class Ground extends Property {
                     else{
                         player.addBalance(-150);
                         numberOfHouses++;
-                        setName("House");}
+                        setName("House");
+                    }
                     break;
                     
                 case 2:
@@ -125,31 +128,36 @@ class Ground extends Property {
                     }
                     if(numberOfHouses == 4){
                         player.addBalance(-100);
-                        isHotel = true;break;
-                    }else
+                        isHotel = true;
+                    }else{
                         System.out.println("Your number of houses not enough");
+                        con = false;
+                    }
                     break;
                 default: throw new WrongInput();
             }
-        }
+        }while (!con);
     }
     public void payToOwner(Player player) throws LowBalance {
         if(!player.equals(owner)){
-            if(numberOfHouses > 0){
-                if(player.getBalance() >= numberOfHouses*100+50){
-                    owner.addBalance(numberOfHouses*100+50);
-                    player.addBalance(-numberOfHouses*100+50);
-                }else
-                    throw new LowBalance();
-            }
-            else if(isHotel){
+            if(isHotel){
                 if(player.getBalance() >= 600){
                     owner.addBalance(600);
                     player.addBalance(-600);
                 }else
                     throw new LowBalance();
             }
-            else owner.addBalance(50);
+            else if(numberOfHouses > 0){
+                if(player.getBalance() >= numberOfHouses*100+50){
+                    owner.addBalance(numberOfHouses*100+50);
+                    player.addBalance(-numberOfHouses*100+50);
+                }else
+                    throw new LowBalance();
+            }
+            else {
+                owner.addBalance(50);
+                player.addBalance(-50);
+            }
         }
     }
 }
@@ -193,15 +201,15 @@ class Bank {
             throw new LowBalance();
         else{
             player.addBalance(-player.getBalance()/2);
-            player.depositCard++;
+            player.setDepositCard(player.getDepositCard()+1);
         }
     }
-    void useDepositCard(Player player) throws WrongInput {
-        if(player.depositCard>=1)
-            player.addBalance(player.depositRemain*2);
-        else{
-            System.out.println("You don't have enough card");
-            throw new WrongInput();
+    void useDepositCard(Player player) {
+        if(player.getDepositCard() == 1){
+            player.addBalance(player.getDepositRemain()*2);
+            System.out.println("You earn "+player.getDepositRemain() * 2 + " from last deposit");
+            player.setDepositCard(0);
+            player.setDepositRemain(0);
         }
     }
 }
