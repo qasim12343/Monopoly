@@ -13,7 +13,6 @@ public class Play {
 
     }
 
-
     public static void create_game() {
         System.out.println("Enter number of players");
         int size = input.nextInt();

@@ -1,12 +1,8 @@
 import java.util.Random;
 
 public class Chance extends Property{
-    private Chance() {
+    public Chance() {
         super("Chance", 24);
-    }
-    private static final Chance chance = new Chance();
-    public static Chance getInstance(){
-        return chance;
     }
 
     public void chanceCell(Player currentPlayer, Player[] players, int sizeOfPlayer) {
@@ -73,10 +69,5 @@ public class Chance extends Property{
             players[i].addBalance(10);
             currentPlayer.addBalance(-10);
         }
-    }
-
-    @Override
-    void setOwner(Player getOwner) {
-        setOwner(Bank.getInstance().banker);
     }
 }

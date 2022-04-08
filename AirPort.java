@@ -1,10 +1,6 @@
 public class AirPort extends Property {
-    private static final AirPort airPort = new AirPort();
-    public static AirPort getInstance(){
-        return airPort;
-    }
 
-    private AirPort() {
+    public AirPort() {
         super("Airport", 3);
     }
 
@@ -48,10 +44,5 @@ public class AirPort extends Property {
                     break;
             }
         } while (!Continue);
-    }
-
-    @Override
-    void setOwner(Player getOwner){
-        setOwner(Bank.getInstance().banker);
     }
 }

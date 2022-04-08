@@ -1,11 +1,8 @@
 public class Bank extends Property{
     Player banker = new Player("Banker");
-    private static final Bank bank = new Bank();
-    private Bank() {
+
+    public Bank() {
         super("Bank", 21);
-    }
-    public static Bank getInstance(){
-        return bank;
     }
 
     void deposit(Player player) throws LowBalance {
@@ -49,8 +46,4 @@ public class Bank extends Property{
         } while (!Continue);
     }
 
-    @Override
-    void setOwner(Player Owner) {
-        setOwner(banker);
-    }
 }

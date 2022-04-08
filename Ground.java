@@ -3,11 +3,10 @@ class Ground extends Property {
     private int numberOfHouses = 0;
     private boolean isHotel = false;
 
-    Ground(int index) {
+    public Ground(int index) {
         super("Ground", index);
     }
 
-    @Override
     public void setOwner(Player player) throws LowBalance {
         if (player.getBalance() < 100){
             throw new LowBalance();
@@ -90,7 +89,6 @@ class Ground extends Property {
     public boolean isHotel() {
         return isHotel;
     }
-
 
     public void doGroundCommands(Ground ground, Player player) {
 

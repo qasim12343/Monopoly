@@ -1,11 +1,7 @@
 public class Prison extends Property{
 
-    private Prison() {
+    public Prison() {
         super("Prison", 13);
-    }
-    private static final Prison prison = new Prison();
-    public static Prison getInstance(){
-        return prison;
     }
     public void prison(Player currentPlayer) {
         System.out.println("You are in prison");
@@ -60,8 +56,4 @@ public class Prison extends Property{
         } while (!Continue);
     }
 
-    @Override
-    void setOwner(Player Owner) {
-        setOwner(Bank.getInstance().banker);
-    }
 }

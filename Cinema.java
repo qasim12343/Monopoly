@@ -1,6 +1,6 @@
 public class Cinema extends Property {
     
-    Cinema(int index) {
+    public Cinema(int index) {
         super("Cinema", index);
     }
 
@@ -21,7 +21,7 @@ public class Cinema extends Property {
             }
         }
     }
-    @Override
+//    @Override
     public void setOwner(Player player) throws LowBalance {
         if (player.getBalance() < 200)
             throw new LowBalance();

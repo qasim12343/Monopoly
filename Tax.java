@@ -1,13 +1,7 @@
 public class Tax extends Property{
-    private Tax( ) {
+    public Tax( ) {
         super("Tax", 17);
     }
-    private static final Tax tax = new Tax();
-
-    public static Tax getInstance(){
-        return tax;
-    }
-
     public void tax(Player currentPlayer) {
         if (currentPlayer.getBalance() * 10 / 100 > currentPlayer.getBalance()) {
             System.out.println("1-sell property  2-use taxCard");
@@ -32,10 +26,5 @@ public class Tax extends Property{
             System.out.println("Cost " + currentPlayer.getBalance() * 10 / 100 + " for the tax");
             currentPlayer.addBalance(-currentPlayer.getBalance() * 10 / 100);
         }
-    }
-
-    @Override
-    void setOwner(Player Owner)  {
-        setOwner(Bank.getInstance().banker);
     }
 }

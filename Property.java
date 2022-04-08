@@ -4,12 +4,12 @@ abstract public class Property {
     private String name;
     private int index;
     boolean Continue = true;
-    private final Player getOwner = Bank.getInstance().banker;
+    private final Player Owner = new Player("Banker");
 
     public Player getOwner() {
-        return getOwner;
+        return Owner;
     }
-    abstract void setOwner(Player Owner) throws LowBalance;
+
 
     public void setName(String name) {
         this.name = name;
