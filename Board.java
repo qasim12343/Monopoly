@@ -22,6 +22,7 @@ class Board {
         }
         return board;
     }
+    char[] a={' ',' ',' '};
 
     public void setBoard(int sizeOfPlayer){
         this.sizeOfPlayer = sizeOfPlayer;

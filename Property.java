@@ -40,10 +40,17 @@ class AirPort extends Property {
         int inp = input.nextInt();
 
         switch (inp) {
-            case 3 -> player.setIndex(3);
-            case 11 -> player.setIndex(11);
-            case 20 -> player.setIndex(20);
-            default -> throw new WrongInput();
+            case 3:
+                player.setIndex(3);
+                break;
+            case 11:
+                 player.setIndex(11);
+                break;
+            case 20:
+                player.setIndex(20);
+                break;
+            default:
+                throw new WrongInput();
         }
     }
 }
