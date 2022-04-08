@@ -1,0 +1,56 @@
+public class Bank extends Property{
+    Player banker = new Player("Banker");
+    private static final Bank bank = new Bank();
+    private Bank() {
+        super("Bank", 21);
+    }
+    public static Bank getInstance(){
+        return bank;
+    }
+
+    void deposit(Player player) throws LowBalance {
+        if (player.getBalance() <= 1)
+            throw new LowBalance();
+        else {
+            player.addBalance(-player.getBalance() / 2);
+            player.setDepositCard(player.getDepositCard() + 1);
+        }
+    }
+
+    void useDepositCard(Player player) {
+        if (player.getDepositCard() == 1) {
+            player.addBalance(player.getDepositRemain() * 2);
+            System.out.println("You earn " + player.getDepositRemain() * 2 + " from last deposit");
+            player.setDepositCard(0);
+            player.setDepositRemain(0);
+        }
+    }
+    public void bank(Player currentPlayer) {
+        System.out.println("Your in Bank");
+        useDepositCard(currentPlayer);
+        do {
+            System.out.println("1- deposit  2-continue");
+            Continue = true;
+            switch (input.next()) {
+                case "1":
+                    try {
+                        deposit(currentPlayer);
+                        break;
+                    } catch (LowBalance e) {
+                        currentPlayer.sellProperty();
+                        Continue = false;
+                    }
+                    break;
+                case "2":
+                    break;
+                default:
+                    Continue = false;
+            }
+        } while (!Continue);
+    }
+
+    @Override
+    void setOwner(Player Owner) {
+        setOwner(banker);
+    }
+}

@@ -1,15 +1,16 @@
 import java.util.Scanner;
 
-class Board {
+public class Board {
 
-    private static Board board = null;
-
-    Player[] player;
+    private static final Board board = new Board();
+    Player[] players;
     Scanner in = new Scanner(System.in);
     int sizeOfPlayer;
-    Bank bank = new Bank();
-    AirPort airPort = new AirPort(31120);
-    Chance chance = new Chance();
+    Bank bank = Bank.getInstance();
+    AirPort airPort = AirPort.getInstance();
+    Chance chance = Chance.getInstance();
+    Tax tax = Tax.getInstance();
+    Prison prison = Prison.getInstance();
     Cinema[] cinemas = {new Cinema(4), new Cinema(8), new Cinema(15), new Cinema(22)};
     Ground[] grounds = {new Ground(2), new Ground(7), new Ground(9), new Ground(12), new Ground(14), new Ground(18), new Ground(19), new Ground(23)};
 
@@ -17,19 +18,16 @@ class Board {
     }
 
     public static Board getInstance(){
-        if(board == null){
-            board = new Board();
-        }
         return board;
     }
 
     public void setBoard(int sizeOfPlayer){
         this.sizeOfPlayer = sizeOfPlayer;
-        player = new Player[sizeOfPlayer];
+        players = new Player[sizeOfPlayer];
         for (int i = 0; i < sizeOfPlayer; i++) {
             System.out.println("Enter player " + (i + 1) + " name");
             String name = in.next();
-            player[i] = new Player(name);//set names
+            players[i] = new Player(name);//set names
         }
     }
 

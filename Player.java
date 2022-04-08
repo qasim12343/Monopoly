@@ -72,14 +72,14 @@ public class Player {
 
     int findCinema (ArrayList<Cinema> properties, int index){
         for (int i = 0; i < properties.size(); i++) {
-            if(properties.get(i).index == index)
+            if(properties.get(i).getIndex() == index)
                 return i;
         }
         return -1;
     }
     int findGround(ArrayList<Ground> properties, int index){
         for (int i = 0; i < properties.size(); i++) {
-            if(properties.get(i).index == index)
+            if(properties.get(i).getIndex() == index)
                 return i;
         }
         return -1;
@@ -96,8 +96,8 @@ public class Player {
                     System.out.println("You are not able to sell");
                     con = false;break;
                     }else{
-                        for (int i = 0; i < cinemas.size(); i++) {
-                            System.out.println(cinemas.get(i).index+"- cinema"+cinemas.get(i).index);
+                        for (Cinema cinema : cinemas) {
+                            System.out.println(cinema.getIndex() + "- cinema" + cinema.getIndex());
                         }
                         boolean con1 = true;
                         do{
@@ -109,7 +109,7 @@ public class Player {
                                 case 22:try {
                                     int indexOfCinema = findCinema(cinemas, input);
                                     if(indexOfCinema != -1){
-                                        cinemas.get(indexOfCinema).setOwner(new Player("Bank"));
+                                        cinemas.get(indexOfCinema).setOwner(Bank.getInstance().banker);
                                         cinemas.remove(indexOfCinema);
                                         addBalance(100);break;
                                     }else
@@ -131,7 +131,7 @@ public class Player {
                         con = false;break;
                     }else{
                         for (int i = 0; i < grounds.size(); i++) {
-                            System.out.println(grounds.get(i).index+"- Ground "+grounds.get(i).index);
+                            System.out.println(grounds.get(i).getIndex()+"- Ground "+grounds.get(i).getIndex());
                         }
                         boolean con1 = true;
                         do{
@@ -148,11 +148,11 @@ public class Player {
                                     try {
                                     int indexOfGround = findGround(grounds, input);
                                     if(indexOfGround != -1){
-                                        grounds.get(indexOfGround).setOwner(new Player("Bank"));
-                                        if(grounds.get(indexOfGround).isHotel)
+                                        grounds.get(indexOfGround).setOwner(Bank.getInstance().banker);
+                                        if(grounds.get(indexOfGround).isHotel())
                                             addBalance(400);
                                         else
-                                            addBalance(((grounds.get(indexOfGround).numberOfHouses*150)+100)/2);
+                                            addBalance(((grounds.get(indexOfGround).getNumberOfHouses()*150)+100)/2);
                                         grounds.remove(indexOfGround);
                                     }else
                                         con1 = false;
@@ -173,42 +173,32 @@ public class Player {
             }
         }while (!con);
     }
-    boolean canBuild(Ground currentGround){
-        for (int i = 0; i < grounds.size(); i++) {
-            if(currentGround.numberOfHouses > grounds.get(i).numberOfHouses){
-                return false;
-            }
-        }
-        return true;
-    }
+
 
     @Override
     public String toString(){
         StringBuilder name = new StringBuilder(getName());
         int size = (15 - name.length()) / 2;
-        for (int i = 0; i < size; i++) {
-            name.append(" ");
-        }
-        StringBuilder cinemaString = new StringBuilder("");
-        StringBuilder groundString = new StringBuilder("");
+        name.append(" ".repeat(Math.max(0, size)));
+        StringBuilder cinemaString = new StringBuilder();
+        StringBuilder groundString = new StringBuilder();
         if(cinemas.size() > 0){
             for (int i = 0; i < cinemas.size(); i++) {
-                cinemaString.append(cinemas.get(i).name).append(" ").append(cinemas.get(i).index).append(" - ");
+                cinemaString.append(cinemas.get(i).getName()).append(" ").append(cinemas.get(i).getIndex()).append(" - ");
             }
         }
         if(grounds.size() > 0){
             for (int i = 0; i < grounds.size(); i++) {
-                groundString.append(grounds.get(i).name).append(" ").append(grounds.get(i).index).append(" - ");
+                groundString.append(grounds.get(i).getName()).append(" ").append(grounds.get(i).getIndex()).append(" - ");
             }
         }
-        String map = String.format("""
-                        %s           
+        return String.format("""
+                        %s
                         ------------------------
-                        balance :%d    %s    
+                        balance :%d    %s
                         cell: %d       %s
                         ------------------------
                         """,
                 name, getBalance(),cinemaString, getIndex, groundString);
-        return map;
     }
 }
