@@ -18,6 +18,110 @@ public class Player {
         balance = 1500;
     }
 
+    int findCinema (ArrayList<Cinema> properties, int index){
+        for (int i = 0; i < properties.size(); i++) {
+            if(properties.get(i).getIndex() == index)
+                return i;
+        }
+        return -1;
+    }
+    int findGround(ArrayList<Ground> properties, int index){
+        for (int i = 0; i < properties.size(); i++) {
+            if(properties.get(i).getIndex() == index)
+                return i;
+        }
+        return -1;
+    }
+
+    public void sellProperty()  {
+        System.out.println("which property do you want to sell");
+        boolean con = true;
+        do{
+            System.out.println("1- cinema  2-Ground|House|hotel  3-return");
+            switch (new Scanner(System.in).nextInt()){
+                case 1:
+                    if(cinemas.size() == 0){
+                    System.out.println("You are not able to sell");
+                    con = false;break;
+                    }else{
+                        for (Cinema cinema : cinemas) {
+                            System.out.println(cinema.getIndex() + "- cinema" + cinema.getIndex());
+                        }
+                        boolean con1 = true;
+                        do{
+                            int input = new Scanner(System.in).nextInt();
+                            switch (input){
+                                case 4:
+                                case 8:
+                                case 15:
+                                case 22:try {
+                                    int indexOfCinema = findCinema(cinemas, input);
+                                    if(indexOfCinema != -1){
+                                        cinemas.get(indexOfCinema).setOwner(Board.getInstance().bank.banker);
+                                        cinemas.remove(indexOfCinema);
+                                        addBalance(100);break;
+                                    }else
+                                        con1 = false;break;
+                                } catch (LowBalance e) {
+                                    e.printStackTrace();
+                                }break;
+                                default: con1 = false;
+                                break;
+                                }
+
+                        }while (!con1);
+                    }
+                    break;
+                    
+                case 2:
+                    if(grounds.size() == 0){
+                        System.out.println("You are not able to sell");
+                        con = false;break;
+                    }else{
+                        for (int i = 0; i < grounds.size(); i++) {
+                            System.out.println(grounds.get(i).getIndex()+"- Ground "+grounds.get(i).getIndex());
+                        }
+                        boolean con1 = true;
+                        do{
+                            int input = new Scanner(System.in).nextInt();
+                            switch (input){
+                                case 2:
+                                case 7:
+                                case 9:
+                                case 12:
+                                case 14:
+                                case 18:
+                                case 19:
+                                case 23:
+                                    try {
+                                    int indexOfGround = findGround(grounds, input);
+                                    if(indexOfGround != -1){
+                                        grounds.get(indexOfGround).setOwner(Board.getInstance().bank.banker);
+                                        if(grounds.get(indexOfGround).isHotel())
+                                            addBalance(400);
+                                        else
+                                            addBalance(((grounds.get(indexOfGround).getNumberOfHouses()*150)+100)/2);
+                                        grounds.remove(indexOfGround);
+                                    }else
+                                        con1 = false;
+                                } catch (LowBalance e) {
+                                    e.printStackTrace();
+                                }
+                                    break;
+                                default: con1 = false;
+                                    break;
+                            }
+                        }while (!con1);
+                    }
+                    break;
+                case 3:con = true;
+                    break;
+                default:
+                    con = false;
+                    break;
+            }
+        }while (!con);
+    }
     public int getDepositCard() {
         return depositCard;
     }
@@ -70,6 +174,7 @@ public class Player {
         this.balance += balance;
     }
 
+<<<<<<< HEAD
     int findCinema(ArrayList<Cinema> properties, int index) {
         for (int i = 0; i < properties.size(); i++) {
             if (properties.get(i).index == index)
@@ -224,4 +329,36 @@ public class Player {
 //
 //
 //    }
+=======
+
+    @Override
+    public String toString(){
+        StringBuilder name = new StringBuilder(getName());
+        int size = (15 - name.length()) / 2;
+        name.append(" ".repeat(Math.max(0, size)));
+        StringBuilder cinemaString = new StringBuilder();
+        StringBuilder groundString = new StringBuilder();
+        if(cinemas.size() > 0){
+            for (int i = 0; i < cinemas.size(); i++) {
+                cinemaString.append(cinemas.get(i).getName()).append(" ").append(cinemas.get(i).getIndex()).append(" - ");
+            }
+        }
+        if(grounds.size() > 0){
+            for (int i = 0; i < grounds.size(); i++) {
+                groundString.append(grounds.get(i).getName()).append(" ").append(grounds.get(i).getIndex()).append(" - ");
+            }
+        }
+        return String.format("""
+                        %s
+                        ------------------------
+                        balance :%d    %s
+                        cell: %d       %s
+                        ------------------------
+                        """,
+                name, getBalance(),cinemaString, getIndex, groundString);
+    }
+    
+    
+    
+>>>>>>> 21636a14162d20e530366db0211eb564c7564da9
 }

@@ -1,9 +1,32 @@
 import java.util.Scanner;
 
-public class Property {
-    String name;
-    int index;
-    
+abstract public class Property {
+    private String name;
+    private int index;
+    boolean Continue = true;
+    private final Player Owner = new Player("Banker");
+
+    public Player getOwner() {
+        return Owner;
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
     Property(String name, int index){
         this.index = index;
         this.name = name;
@@ -22,6 +45,7 @@ class WrongInput extends Exception{
     }
 }
 
+<<<<<<< HEAD
 class AirPort extends Property {
     
     AirPort( int index) {
@@ -220,3 +244,5 @@ class Bank {
         }
     }
 }
+=======
+>>>>>>> 21636a14162d20e530366db0211eb564c7564da9
