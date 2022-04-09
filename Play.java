@@ -1,30 +1,99 @@
 import java.util.Scanner;
 
 public class Play {
-<<<<<<< HEAD
-
-    static boolean Continue = true;
     public static Board b1 = Board.getInstance();
     public static Scanner input = new Scanner(System.in);
 
-    public static void main(String[] args) throws Exception {
-
-//        String command = input.next();
-//        if (!command.equals("create_game"))
-//            System.out.println("no game created");
-//        else
-=======
-    public static Board b1 = Board.getInstance();
-    public static Scanner input = new Scanner(System.in);
+    public static boolean Continue = true;
 
     public static void main(String[] args) {
         String command = input.next();
         if (!command.equals("create_game"))
             System.out.println("no game created");
         else
->>>>>>> 21636a14162d20e530366db0211eb564c7564da9
             create_game();
 
+    }
+    public static void doGroundCommands(Ground ground, Player player) {
+        if (!ground.getOwner().getName().equals("Bank") && !ground.getOwner().equals(player)) {
+            try {
+                ground.payToOwner(player);
+            } catch (LowBalance e) {
+                player.sellProperty();
+            }
+        } else {
+            System.out.println(ground.getOwner().getName() + "'s " +ground.getName() );
+            do {
+                System.out.println("1-buy  2-build  3- Continue ");
+                Continue = true;
+                try {
+                    switch (input.nextInt()) {
+                        case 1:
+                            if (!ground.getOwner().getName().equals("Bank")) {
+                                System.out.println("you can not buy");
+                                Continue = false;
+                                break;
+                            } else {
+                                ground.setOwner(player);
+                                player.grounds.add(ground);
+                            }
+                            break;
+                        case 2:
+                            if(!ground.canBuild(player)){
+                                System.out.println("You can not build because equality");
+                                break;
+                            }
+                            else if (player.equals(ground.getOwner())) {
+                                ground.build(player);
+                                break;
+                            } else {
+                                System.out.println("You can not build");
+                                Continue = false;
+                            }
+                            break;
+                        case 3:ground.payToOwner(player);
+                            break;
+                        default:
+                            throw new WrongInput();
+                    }
+                } catch (WrongInput e1) {
+                    Continue = false;
+                } catch (LowBalance l) {
+                    System.out.println(l.getMessage());
+                    player.sellProperty();
+                    Continue = false;
+                }
+            } while (!Continue);
+        }
+    }
+    public static void doCinemaCommands(Cinema cinema, Player player) {
+        System.out.println(cinema.getOwner().getName() + "'s " + cinema.getName());
+        do {
+            Continue = true;
+            try {
+                if (cinema.getOwner().getName().equals("Bank")) {
+                    System.out.println("1-buy  2-Continue");
+                    switch (input.nextInt()) {
+                        case 1:
+                            cinema.setOwner(player);
+                            player.cinemas.add(cinema);
+                            break;
+                        case 2:
+                            cinema.payToOwner(player);
+                            break;
+                        default:
+                            throw new WrongInput();
+                    }
+                } else
+                    cinema.payToOwner(player);
+            } catch (WrongInput e1) {
+                Continue = false;
+            } catch (LowBalance l) {
+                System.out.println(l.getMessage());
+                player.sellProperty();
+                Continue = false;
+            }
+        } while (!Continue);
     }
 
     public static void create_game() {
@@ -42,7 +111,8 @@ public class Play {
         int turn = 0;
         do {
             Player currentPlayer = b1.players[turn];
-            System.out.println(currentPlayer.getName() + "'s turn");
+            showChart();
+            System.out.print(b1.players[turn]);
             System.out.println("Enter dice number");
             int dice = input.nextInt();
             while (dice > 6 || dice < 1) {
@@ -87,16 +157,16 @@ public class Play {
                     break;
                 //Cinema
                 case 4:
-                    b1.cinemas[0].doCinemaCommands(b1.cinemas[0], currentPlayer);
+                    doCinemaCommands(b1.cinemas[0], currentPlayer);
                     break;
                 case 8:
-                    b1.cinemas[1].doCinemaCommands(b1.cinemas[1], currentPlayer);
+                    doCinemaCommands(b1.cinemas[1], currentPlayer);
                     break;
                 case 15:
-                    b1.cinemas[2].doCinemaCommands(b1.cinemas[2], currentPlayer);
+                    doCinemaCommands(b1.cinemas[2], currentPlayer);
                     break;
                 case 22:
-                    b1.cinemas[3].doCinemaCommands(b1.cinemas[3], currentPlayer);
+                    doCinemaCommands(b1.cinemas[3], currentPlayer);
                     break;
 
                 //Road
@@ -116,57 +186,33 @@ public class Play {
                     break;
                 //Grounds
                 case 2:
-                    b1.grounds[0].doGroundCommands(b1.grounds[0], currentPlayer);
+                    doGroundCommands(b1.grounds[0], currentPlayer);
                     break;
                 case 7:
-                    b1.grounds[1].doGroundCommands(b1.grounds[1], currentPlayer);
+                    doGroundCommands(b1.grounds[1], currentPlayer);
                     break;
                 case 9:
-                    b1.grounds[2].doGroundCommands(b1.grounds[2], currentPlayer);
+                    doGroundCommands(b1.grounds[2], currentPlayer);
                     break;
                 case 12:
-                    b1.grounds[3].doGroundCommands(b1.grounds[3], currentPlayer);
+                    doGroundCommands(b1.grounds[3], currentPlayer);
                     break;
                 case 14:
-                    b1.grounds[4].doGroundCommands(b1.grounds[4], currentPlayer);
+                    doGroundCommands(b1.grounds[4], currentPlayer);
                     break;
                 case 18:
-                    b1.grounds[5].doGroundCommands(b1.grounds[5], currentPlayer);
+                    doGroundCommands(b1.grounds[5], currentPlayer);
                     break;
                 case 19:
-                    b1.grounds[6].doGroundCommands(b1.grounds[6], currentPlayer);
+                    doGroundCommands(b1.grounds[6], currentPlayer);
                     break;
                 case 23:
-                    b1.grounds[7].doGroundCommands(b1.grounds[7], currentPlayer);
+                    doGroundCommands(b1.grounds[7], currentPlayer);
                     break;
 
                 //Bank
                 case 21:
-<<<<<<< HEAD
-                    System.out.println("Your in Bank");
-                    b1.bank.useDepositCard(currentPlayer);
-                    System.out.println("1- deposit  2-continue");
-                    do {
-                        Continue = true;
-                        String s = input.next();
-                        if (s.equals("1")) {
-                            try {
-                                b1.bank.deposit(currentPlayer);
-                                break;
-                            } catch (LowBalance e) {
-                                e.getMessage();
-                                currentPlayer.sellProperty();
-                                Continue = false;
-                            }
-
-                        } else if (s.equals("2")) {
-                        } else {
-                            Continue = false;
-                        }
-                    } while (!Continue);
-=======
                     b1.bank.bank(currentPlayer);
->>>>>>> 21636a14162d20e530366db0211eb564c7564da9
                     break;
                 // Tax
                 case 17:
@@ -181,17 +227,8 @@ public class Play {
                     b1.chance.chanceCell(currentPlayer, b1.players, b1.sizeOfPlayer);
                     break;
             }
-<<<<<<< HEAD
-
-               showChart();
-
-=======
-            for (int i = 0; i < b1.sizeOfPlayer; i++) {
-                System.out.print((b1.players[i]));
-            }
->>>>>>> 21636a14162d20e530366db0211eb564c7564da9
-            System.out.println();
             turn++;
+
             if (turn >= b1.sizeOfPlayer)
                 turn = 0;
         } while (winner());
@@ -201,7 +238,7 @@ public class Play {
     public static boolean winner() {
 
         for (int i = 0; i < b1.sizeOfPlayer; i++) {
-            if (b1.players[i].getBalance() <= 10 && b1.players[i].cinemas.size() == 0 && b1.players[i].grounds.size() == 0) {
+            if (b1.players[i].lowBalance && !b1.players[i].sellProperty()) {
                 b1.sizeOfPlayer--;
                 System.out.println("Player " + (i + 1) + " lost\n");
                 if (b1.sizeOfPlayer - i >= 0) System.arraycopy(b1.players, i + 1, b1.players, i, b1.sizeOfPlayer - i);
@@ -216,7 +253,7 @@ public class Play {
 
     public static String  changeName(int round ,int index ) {
         if (round < b1.sizeOfPlayer) {
-            Player p = b1.player[round];
+            Player p = b1.players[round];
             String [] firstName ={"P1","P2","P3","P4"};
 
             for (int i = 0; i < 24; i++) {
@@ -248,13 +285,13 @@ public class Play {
                 GREEN_BOLD+changeName(2,12) +"  "+changeName(3,12)+"  "+ BLUE_BOLD+"    | ");
         System.out.println(BLUE_BOLD+"---------------------------------------------------------------"+
                 "--------------------------------------");
-        System.out.println("             |"+YELLOW_BOLD+"   8:Cinema       9:Ground        10:Root "+
+        System.out.println("             |"+YELLOW_BOLD+"   8:Cinema       9:Ground        10:Road "+
                 "       11:AirPlane     12:Ground  "+BLUE_BOLD+"|");
 
         System.out.println( GREEN_BOLD+changeName(0,7) +" "+changeName(1,7)+" "+changeName(2,7) +" "+changeName(3,7)+
                 "  "+BLUE_BOLD +"|"+RED_BOLD+ "7:" +YELLOW_BOLD + "Ground " +" "+"                  "+
                 "                                      "+YELLOW_BOLD+"Prison :"+RED_BOLD+"13"+BLUE_BOLD+"|"
-        +GREEN_BOLD+changeName(0,13) +" "+changeName(1,13)+" "+changeName(2,13) +" "+changeName(3,13));
+                +GREEN_BOLD+changeName(0,13) +" "+changeName(1,13)+" "+changeName(2,13) +" "+changeName(3,13));
         System.out.println(BLUE_BOLD+"_____________|                                    " +
                 "                                        |____________");
         System.out.println( GREEN_BOLD+changeName(0,6) +" "+changeName(1,6)+" "+changeName(2,6) +" "+changeName(3,6)+
@@ -265,7 +302,7 @@ public class Play {
         System.out.println(BLUE_BOLD+"_____________|                                    " +
                 "                                        |____________");
         System.out.println( GREEN_BOLD+changeName(0,5) +" "+changeName(1,5)+" "+changeName(2,5) +" "+changeName(3,5)
-                +"  "+BLUE_BOLD +"|"+RED_BOLD+ "5:" +YELLOW_BOLD + "Root   "+" "+"                  "+
+                +"  "+BLUE_BOLD +"|"+RED_BOLD+ "5:" +YELLOW_BOLD + "Road   "+" "+"                  "+
                 "                                      "+YELLOW_BOLD+"Cinema :"+RED_BOLD+"14"+BLUE_BOLD+"|"+
                 GREEN_BOLD+changeName(0,15) +" "+changeName(1,15)+" "+changeName(2,15) +" "+changeName(3,15));
 
@@ -273,7 +310,7 @@ public class Play {
                 "                                        |____________");
         System.out.println( GREEN_BOLD+changeName(0,4) +" "+changeName(1,4)+" "+changeName(2,4) +" "+changeName(3,4)
                 +"  "+BLUE_BOLD +"|"+RED_BOLD+ "4:" +YELLOW_BOLD + "Cinema " +" "+"                  "+
-                "                                      "+YELLOW_BOLD+"Root   :"+RED_BOLD+"15"+BLUE_BOLD+"|"+
+                "                                      "+YELLOW_BOLD+"Road   :"+RED_BOLD+"15"+BLUE_BOLD+"|"+
                 GREEN_BOLD+changeName(0,16) +" "+changeName(1,16)+" "+changeName(2,16) +" "+changeName(3,16));
 
         System.out.println(BLUE_BOLD+"_____________|                                    " +
@@ -323,7 +360,6 @@ public class Play {
     public static final String GREEN_BOLD = "\033[1;32m";  // GREEN
     public static final String YELLOW_BOLD = "\033[1;33m"; // YELLOW
     public static final String BLUE_BOLD = "\033[1;34m";   // BLUE
-
 
 
 
