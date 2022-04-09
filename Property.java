@@ -1,15 +1,18 @@
 import java.util.Scanner;
 
-abstract public class Property {
+public class Property {
     private String name;
     private int index;
     boolean Continue = true;
-    private final Player Owner = new Player("Banker");
+    private Player Owner = new Player("Bank");
 
     public Player getOwner() {
         return Owner;
     }
 
+    public void setOwner(Player owner) throws LowBalance {
+        Owner = owner;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -35,8 +38,9 @@ abstract public class Property {
 }
 
 class LowBalance extends Exception{
-    public LowBalance() {
+    public LowBalance(Player player) {
         super("You do not have enough money");
+        player.lowBalance = true;
     }
 }
 class WrongInput extends Exception{

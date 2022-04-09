@@ -6,7 +6,7 @@ public class AirPort extends Property {
 
     public void buyTicket(Player player) throws LowBalance, WrongInput {
         if (player.getBalance() < 50)
-            throw new LowBalance();
+            throw new LowBalance(player);
         player.addBalance(-50);
         System.out.println("Choose location to travel");
         if (player.getIndex() == 3) System.out.println("11 or 20");

@@ -1,15 +1,15 @@
 public class Bank extends Property{
-    Player banker = new Player("Banker");
-
+    Player banker = new Player("Bank");
     public Bank() {
         super("Bank", 21);
     }
 
     void deposit(Player player) throws LowBalance {
         if (player.getBalance() <= 1)
-            throw new LowBalance();
+            throw new LowBalance(player);
         else {
             player.addBalance(-player.getBalance() / 2);
+            player.setDepositRemain(player.getBalance() / 2);
             player.setDepositCard(player.getDepositCard() + 1);
         }
     }

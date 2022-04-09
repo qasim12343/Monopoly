@@ -36,17 +36,15 @@ public class Prison extends Property{
                 case 3:
                     if (currentPlayer.getBalance() < 50) {
                         System.out.println("You do not have enough money to pay");
-                        do {
-                            System.out.println("1- Use another option\n2-sell property");
-                            switch (input.nextInt()) {
-                                case 1:
-                                    Continue = false;
-                                    break;
-                                case 2:
-                                    currentPlayer.sellProperty();
-                                    break;
-                            }
-                        } while (!Continue);
+                        System.out.println("1- Use another option  2-sell property");
+                        switch (input.nextInt()) {
+                            case 1:
+                                Continue = false;
+                                break;
+                            case 2:
+                                currentPlayer.sellProperty();
+                                break;
+                        }
                     } else {
                         currentPlayer.addBalance(-50);
                         currentPlayer.setIndex(currentPlayer.getIndex()+1);

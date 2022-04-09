@@ -9,13 +9,14 @@ public class Player {
     private int depositRemain = 0;
     private int chanceToRelease = 0;
     private int TaxCard = 0;
-    private int getIndex = 1;
+    private int Index = 1;
+    boolean lowBalance = false;
     ArrayList<Cinema> cinemas = new ArrayList<>();
     ArrayList<Ground> grounds = new ArrayList<>();
 
     public Player(String name) {
         this.name = name;
-        balance = 300;
+        balance = 1500;
     }
 
     int findCinema (ArrayList<Cinema> properties, int index){
@@ -33,7 +34,9 @@ public class Player {
         return -1;
     }
 
-    public void sellProperty()  {
+    public boolean sellProperty()  {
+        if(cinemas.size() == 0 && grounds.size() == 0)
+            return false;
         System.out.println("which property do you want to sell");
         boolean con = true;
         do{
@@ -97,17 +100,16 @@ public class Player {
                                     int indexOfGround = findGround(grounds, input);
                                     if(indexOfGround != -1){
                                         grounds.get(indexOfGround).setOwner(Board.getInstance().bank.banker);
-                                        if(grounds.get(indexOfGround).isHotel())
+                                        if(grounds.get(indexOfGround).isHotel()){
                                             addBalance(400);
-                                        else
+                                        } else
                                             addBalance(((grounds.get(indexOfGround).getNumberOfHouses()*150)+100)/2);
-                                        grounds.remove(indexOfGround);
+                                        grounds.remove(indexOfGround);break;
                                     }else
                                         con1 = false;
                                 } catch (LowBalance e) {
                                     e.printStackTrace();
-                                }
-                                    break;
+                                }break;
                                 default: con1 = false;
                                     break;
                             }
@@ -121,6 +123,8 @@ public class Player {
                     break;
             }
         }while (!con);
+        lowBalance = false;
+        return true;
     }
     public int getDepositCard() {
         return depositCard;
@@ -155,11 +159,11 @@ public class Player {
     }
 
     public int getIndex() {
-        return getIndex;
+        return Index;
     }
 
-    public void setIndex(int getIndex) {
-        this.getIndex = getIndex;
+    public void setIndex(int Index) {
+        this.Index = Index;
     }
 
     public String getName() {
@@ -177,9 +181,6 @@ public class Player {
 
     @Override
     public String toString(){
-        StringBuilder name = new StringBuilder(getName());
-        int size = (15 - name.length()) / 2;
-        name.append(" ".repeat(Math.max(0, size)));
         StringBuilder cinemaString = new StringBuilder();
         StringBuilder groundString = new StringBuilder();
         if(cinemas.size() > 0){
@@ -193,12 +194,15 @@ public class Player {
             }
         }
         return String.format("""
-                        %s
+                        %s's turn
                         ------------------------
                         balance :%d    %s
                         cell: %d       %s
+                        depositRemain: %d        TaxCard: %d
+                        releaseCard: %d
                         ------------------------
                         """,
-                name, getBalance(),cinemaString, getIndex, groundString);
+                getName(), getBalance(),cinemaString, getIndex(), groundString,
+                getDepositRemain(), getTaxCard(),getChanceToRelease());
     }
 }

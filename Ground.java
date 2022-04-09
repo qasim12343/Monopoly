@@ -7,12 +7,13 @@ class Ground extends Property {
         super("Ground", index);
     }
 
+    @Override
     public void setOwner(Player player) throws LowBalance {
         if (player.getBalance() < 100){
-            throw new LowBalance();
+            throw new LowBalance(player);
         }else {
         player.addBalance(-100);
-        setOwner(player);
+        super.setOwner(player);
         }
     }
 
@@ -27,7 +28,7 @@ class Ground extends Property {
                         System.out.println("You can not build it is max");
                         con = false;
                     } else if (player.getBalance() < 150) {
-                        throw new LowBalance();
+                        throw new LowBalance(player);
                     } else {
                         player.addBalance(-150);
                         numberOfHouses++;
@@ -37,7 +38,7 @@ class Ground extends Property {
 
                 case 2:
                     if (player.getBalance() < 100) {
-                        throw new LowBalance();
+                        throw new LowBalance(player);
                     }
                     if (numberOfHouses == 4) {
                         player.addBalance(-100);
@@ -68,16 +69,18 @@ class Ground extends Property {
                     getOwner().addBalance(600);
                     player.addBalance(-600);
                 } else
-                    throw new LowBalance();
+                    throw new LowBalance(player);
             } else if (numberOfHouses > 0) {
                 if (player.getBalance() >= numberOfHouses * 100 + 50) {
                     getOwner().addBalance(numberOfHouses * 100 + 50);
                     player.addBalance(-numberOfHouses * 100 + 50);
                 } else
-                    throw new LowBalance();
+                    throw new LowBalance(player);
             } else {
+                if(player.getBalance() >= 50){
                 getOwner().addBalance(50);
                 player.addBalance(-50);
+                }else throw new LowBalance(player);
             }
         }
     }
@@ -90,57 +93,5 @@ class Ground extends Property {
         return isHotel;
     }
 
-    public void doGroundCommands(Ground ground, Player player) {
 
-        if (!ground.getOwner().getName().equals("Bank") && !ground.getOwner().equals(player)) {
-            try {
-                ground.payToOwner(player);
-            } catch (LowBalance e) {
-                player.sellProperty();
-            }
-        } else {
-            System.out.println(ground.getOwner().getName() + "'s " +ground.getName() );
-            do {
-                System.out.println("1-buy  2-build  3- Continue ");
-                Continue = true;
-                try {
-                    switch (input.nextInt()) {
-                        case 1:
-                            if (!ground.getOwner().getName().equals("Bank")) {
-                                System.out.println("you can not buy");
-                                Continue = false;
-                                break;
-                            } else {
-                                ground.setOwner(player);
-                                player.grounds.add(ground);
-                            }
-                            break;
-                        case 2:
-                            if(!canBuild(player)){
-                                System.out.println("You can not build because equality");
-                                break;
-                            }
-                            else if (player.equals(ground.getOwner())) {
-                                ground.build(player);
-                                break;
-                            } else {
-                                System.out.println("You can not build");
-                                Continue = false;
-                            }
-                            break;
-                        case 3:ground.payToOwner(player);
-                            break;
-                        default:
-                            throw new WrongInput();
-                    }
-                } catch (WrongInput e1) {
-                    Continue = false;
-                } catch (LowBalance l) {
-                    System.out.println(l.getMessage());
-                    player.sellProperty();
-                    Continue = false;
-                }
-            } while (!Continue);
-        }
-    }
 }
