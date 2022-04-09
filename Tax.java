@@ -9,6 +9,7 @@ public class Tax extends Property{
                 Continue = true;
                 switch (input.nextInt()) {
                     case 1:
+                        currentPlayer.lowBalance = true;
                         currentPlayer.sellProperty();
                         break;
                     case 2:

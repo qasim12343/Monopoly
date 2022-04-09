@@ -7,7 +7,7 @@ public class Prison extends Property{
         System.out.println("You are in prison");
         do {
             Continue = true;
-            System.out.println("1-release by chanceCard\n2-stay  3-pay 50 $ to release");
+            System.out.println("1-release by chanceCard   2-stay  3-pay 50 $ to release");
             switch (input.nextInt()) {
                 case 1:
                     if (currentPlayer.getChanceToRelease() >= 1) {
@@ -26,6 +26,7 @@ public class Prison extends Property{
                         System.out.println("1- sell property  2- return");
                         if (input.nextInt() == 1) {
                             currentPlayer.sellProperty();
+                            currentPlayer.lowBalance = true;
                         } else {
                             Continue = false;
                         }
@@ -42,6 +43,7 @@ public class Prison extends Property{
                                 Continue = false;
                                 break;
                             case 2:
+                                currentPlayer.lowBalance = true;
                                 currentPlayer.sellProperty();
                                 break;
                         }

@@ -2,6 +2,7 @@ public class Bank extends Property{
     Player banker = new Player("Bank");
     public Bank() {
         super("Bank", 21);
+        banker.addBalance(10000000);
     }
 
     void deposit(Player player) throws LowBalance {
@@ -34,6 +35,7 @@ public class Bank extends Property{
                         deposit(currentPlayer);
                         break;
                     } catch (LowBalance e) {
+                        currentPlayer.lowBalance = true;
                         currentPlayer.sellProperty();
                         Continue = false;
                     }

@@ -28,5 +28,4 @@ public class Cinema extends Property {
         player.addBalance(-200);
         super.setOwner(player); ;
     }
-
 }

@@ -36,6 +36,7 @@ public class Chance extends Property{
     public void getMoney(Player player) {
         System.out.println(" Your chance card is 200$");
         player.addBalance(200);
+        player.lowBalance = false;
     }
 
     public void goToPrison(Player player) {
