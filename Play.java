@@ -112,6 +112,7 @@ public class Play {
         do {
             Player currentPlayer = b1.players[turn];
             showChart();
+
             System.out.print(b1.players[turn]);
             System.out.println("Enter dice number");
             int dice = input.nextInt();
