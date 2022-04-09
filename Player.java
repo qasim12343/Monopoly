@@ -68,7 +68,7 @@ public class Player {
                                     }else
                                         con1 = false;break;
                                 } catch (LowBalance e) {
-                                    e.getMessage();
+                                    System.out.println(e.getMessage());
                                 }break;
                                 default: con1 = false;
                                 break;
