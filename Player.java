@@ -193,17 +193,16 @@ public class Player {
                 groundString.append(grounds.get(i).getName()).append(" ").append(grounds.get(i).getIndex()).append(" - ");
             }
         }
-        return balance+" ";
-// String.format("""
-//                        %s's turn
-//                        ------------------------
-//                        balance :%d    %s
-//                        cell: %d       %s
-//                        depositRemain: %d        TaxCard: %d
-//                        releaseCard: %d
-//                        ------------------------
-//                        """,
-//                getName(), getBalance(),cinemaString, getIndex(), groundString,
-//                getDepositRemain(), getTaxCard(),getChanceToRelease());
+        return String.format("""
+                        %s's turn
+                        ------------------------
+                        balance :%d    %s
+                        cell: %d       %s
+                        depositRemain: %d        TaxCard: %d
+                        releaseCard: %d
+                        ------------------------
+                        """,
+                getName(), getBalance(),cinemaString, getIndex(), groundString,
+                getDepositRemain(), getTaxCard(),getChanceToRelease());
     }
 }
