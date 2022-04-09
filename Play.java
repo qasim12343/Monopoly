@@ -261,15 +261,10 @@ public class Play {
         if (round < b1.sizeOfPlayer) {
             Player p = b1.players[round];
             String [] firstName ={"P1","P2","P3","P4"};
-
-            for (int i = 0; i < 24; i++) {
-                if (p.getIndex()==index) {
-                    return firstName[round];
-                }else return "  ";
-            }
-            return "  ";
+            if (p.getIndex()==index)
+                return firstName[round];
         }
-        else return "  ";
+        return "  ";
     }
 
 

@@ -26,6 +26,6 @@ public class Cinema extends Property {
         if (player.getBalance() < 200)
             throw new LowBalance(player);
         player.addBalance(-200);
-        super.setOwner(player); ;
+        super.setOwner(player);
     }
 }
