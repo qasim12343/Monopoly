@@ -6,16 +6,23 @@ public class Cinema extends Property {
 
     public void payToOwner(Player player) throws LowBalance {
         if (!player.equals(getOwner())) {
-            if (getOwner().cinemas.size() == 1 || getOwner().cinemas.size() == 2) {
-                if (player.getBalance() >= getOwner().cinemas.size() * 25) {
-                    getOwner().addBalance(getOwner().cinemas.size() * 25);
-                    player.addBalance(-25 * getOwner().cinemas.size());
+            if(getOwner().cinemas.size() == 0){
+                if (player.getBalance() >=  25) {
+                    getOwner().addBalance( 25);
+                    player.addBalance(-25 );
                 } else
                     throw new LowBalance(player);
-            } else if (getOwner().cinemas.size() >= 3) {
+            }
+            if (getOwner().cinemas.size() >= 3) {
                 if (player.getBalance() >= 100) {
                     getOwner().addBalance(100);
                     player.addBalance(-100);
+                } else
+                    throw new LowBalance(player);
+            } else {
+                if (player.getBalance() >= getOwner().cinemas.size() * 25) {
+                    getOwner().addBalance(getOwner().cinemas.size() * 25);
+                    player.addBalance(-25 * getOwner().cinemas.size());
                 } else
                     throw new LowBalance(player);
             }

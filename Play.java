@@ -19,6 +19,7 @@ public class Play {
             try {
                 ground.payToOwner(player);
             } catch (LowBalance e) {
+                player.lowBalance = true;
                 player.sellProperty();
             }
         } else {
@@ -112,10 +113,6 @@ public class Play {
 
         int turn = 0;
         do {
-            turn++;
-            if (turn >= b1.sizeOfPlayer)
-                turn = 0;
-
             Player currentPlayer = b1.players[turn];
             showChart();
             System.out.print(b1.players[turn]);
@@ -180,14 +177,18 @@ public class Play {
                 case 10:
                 case 16:
                     do{
-                        if(currentPlayer.getBalance() >= 100){
-                            System.out.println("Cost 100 $ for road");
-                            currentPlayer.addBalance(-100);break;
-                        }else{
+                        if(currentPlayer.getBalance() < 100){
                             currentPlayer.lowBalance = true;
                             currentPlayer.sellProperty();
                         }
-                    }while (currentPlayer.getBalance() < 100);
+                        if(currentPlayer.getBalance() >= 100) {
+                            currentPlayer.lowBalance = false;
+                            System.out.println("Cost 100 $ for road");
+                            currentPlayer.addBalance(-100);
+                            break;
+                        }
+                    }while (currentPlayer.lowBalance && currentPlayer.grounds.size() > 0 && currentPlayer.cinemas.size() > 0);
+
                     break;
                 //Award
                 case 6:
@@ -238,6 +239,11 @@ public class Play {
                     b1.chance.chanceCell(currentPlayer, b1.players, b1.sizeOfPlayer);
                     break;
             }
+
+            turn++;
+            if (turn >= b1.sizeOfPlayer)
+                turn = 0;
+
         } while (winner());
 
     }
@@ -245,6 +251,8 @@ public class Play {
     public static boolean winner() {
 
         for (int i = 0; i < b1.sizeOfPlayer; i++) {
+            if(b1.players[i].getBalance() < 10)
+                b1.players[i].lowBalance = true;
             if (b1.players[i].lowBalance && b1.players[i].cinemas.size()==0 && b1.players[i].grounds.size()==0) {
                 b1.sizeOfPlayer--;
                 System.out.println("Player " + (i + 1) + " lost\n");
@@ -260,9 +268,13 @@ public class Play {
     public static String  changeName(int round ,int index ) {
         if (round < b1.sizeOfPlayer) {
             Player p = b1.players[round];
-            String [] firstName ={"P1","P2","P3","P4"};
+            String [] changeNames = new String[b1.sizeOfPlayer];
+            for (int i = 0; i < b1.sizeOfPlayer; i++) {
+                changeNames[i] = i+1+""+b1.players[i].getName().charAt(0);
+            }
+
             if (p.getIndex()==index)
-                return firstName[round];
+                return changeNames[round];
         }
         return "  ";
     }
